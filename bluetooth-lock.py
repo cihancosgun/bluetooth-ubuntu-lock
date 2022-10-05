@@ -10,9 +10,9 @@ import time
 ENV = "KDE"  # Can be 'KDE' or 'GNOME'
 DEVICEADDR = "9C:5A:81:F7:8C:5B" # bluetooth device address
 CHECKINTERVAL = 1  # device pinged at this interval (seconds) when screen is unlocked
-CHECKREPEAT = 2  # device must be unreachable this many times to lock
+CHECKREPEAT = 5  # device must be unreachable this many times to lock
 mode = 'unlocked'
-minrssivalue = -1
+minrssivalue = -5
 # sudo btmgmt conn-info 9C:5A:81:F7:8C:5B alternatif method
 if __name__ == "__main__":
     while True:
@@ -27,8 +27,7 @@ if __name__ == "__main__":
             	rssiresult = result[rssiindex+4:rssiindex+7].strip()
             	intrssiresult = int(rssiresult)
             else:
-            	intrssiresult = minrssivalue - 1
-            #print(rssiresult)
+            	intrssiresult = minrssivalue - 1            
             #process = subprocess.Popen(['sudo', '/usr/bin/l2ping', DEVICEADDR, '-t', '1', '-c', '1'], shell=False, stdout=subprocess.PIPE)
             #process.wait()
             #if process.returncode == 0:
@@ -38,6 +37,7 @@ if __name__ == "__main__":
             #print("ping response code: %d" % (process.returncode))
             time.sleep(1)
             tries = tries + 1
+            print(rssiresult)
 
         if intrssiresult >= minrssivalue and mode == 'locked':
             mode = 'unlocked'
